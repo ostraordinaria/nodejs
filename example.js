@@ -5,32 +5,35 @@ app.get('/', function(req, res) {
     res.render('home.ejs');
 })
 
-app.get('/item/:name', function(req, res) {
-    var items = {
-        book: 'a book',
-        table: 'a table',
-        door: 'a door'
+app.get('/animal/:name', function(req, res) {
+    var animals = {
+        dog: 'Bruno',
+        cat: 'Elen',
     };
-    var item = req.params.name;
+    var name = req.params.name;
+    var tag = "";
 
-    //checkin json objects. temporary until a better solution is found.
-    if (items[item] == undefined) {
-        tag = 'no matchings found';
+    console.log(name);
+    console.log(animals);
+
+    //checking json objects. temporary until a better solution is found.
+    if (animals[name] == undefined) {
+        name = 'no matchings found';
     } else {
-        var tag = items[item];
+        name = animals[name];
     }
-    
-    //passing item as tag for home.ejs
-    res.render("home.ejs", { tag: item })
-    res.send(tag);
+    console.log(name);
+    console.log(animals[name]);
+    //passing name from the route as name for animal.ejs
+    res.render("animal.ejs", { name: name })
 });
 
 app.get('/:word/:loop', function(req, res) {
     var word = req.params.word;
     var loop = parseInt(req.params.loop);
-    var ouput = "";
+    var output = "";
     for (var i = 0; i < loop; i++) {
-        output = word + " ";
+        output += word + " ";
     };
     res.send(output);
 });
