@@ -25,7 +25,9 @@ app.get('/animal/:name', function(req, res) {
     console.log(name);
     console.log(animals[name]);
     //passing name from the route as name for animal.ejs
-    res.render("animal.ejs", { name: name })
+    res.render("animal.ejs", {
+        name: name
+    })
 });
 
 app.get('/:word/:loop', function(req, res) {
