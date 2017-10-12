@@ -1,0 +1,36 @@
+<% include master/header %>
+    <div class="container">
+        <header class="jumbotron">
+            <h1>Welcome, Paw Adopters! <span class="fa fa-paw"></h1>
+            <p>
+                <a class="btn btn-primary" href="/dogs/add">Add New Friends <span class="fa fa-paw"></span></a>
+            </p>
+            <p>Meet our friends</p>
+        </header>
+        <div class="row text-center d-md-inline-flex flex-row">
+            <div class="col-lg-12">
+                <h3>Our latest friends</h3>
+            </div>
+            <% dogs.forEach(function(dog){ %>
+                <div class="col-sm-6 col-md-3 my-3 p-2">
+ <!--                    <div class="img-thumbnail">
+                        <figure class="figure my-0"> -->
+                            <img class="img-fluid figure-img" src="<%= dog.image %>" alt="">
+                            <figcaption class="figure-caption">
+                                <h6><%= dog.name %></h6>
+                                <p>
+                                    <a href="/dogs/<%= dog._id %>" class="btn btn-primary">
+                                    	More Info
+                                    </a>
+                                    <a href="/dogs/<%= dog._id %>/edit" class="btn btn-primary">
+                                        Edit Dog
+                                    </a>
+                                </p>
+                            </figcaption>
+                        <!-- </figure>
+                    </div> -->
+                </div>
+                <% }); %>
+        </div>
+        <% include master/footer %>
+    </div>
