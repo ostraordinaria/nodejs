@@ -1,8 +1,16 @@
-var express = require("express");
-var app = express();
-var mongoose = require("mongoose");
-var bodyParser = require("body-parser");
-var methodOverride = require("method-override");
+var express = require("express"),
+    app = express(),
+    mongoose = require("mongoose"),
+    bodyParser = require("body-parser"),
+    methodOverride = require("method-override"),
+    expressSanitizer = require("express-sanitizer"),
+    passport = require("passport"),
+    LocalStrategy = require("passport-local"),
+    User = require("./models/user"),
+    Dog = require("./models/dog"),
+    Comment = require("./models/comment"),
+    seed = require("./seeds");
+
 
 //add mongoose and connect to pawadoption db.
 //it will check if the selected db is available.
@@ -13,59 +21,30 @@ mongoose.connect('mongodb://localhost/pawadoption', {
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
+app.use(express.static(__dirname + "/public"))
 app.use(methodOverride("_method"));
+app.use(expressSanitizer());
+//seed db
+seed();
 
-//setting up schema
-var dogSchema = new mongoose.Schema({
-    name: String,
-    breed: String,
-    description: String,
-    image: String
-});
-
-var Dog = mongoose.model("Dog", dogSchema);
-
-//create new dog and save it to db
-// Dog.create({
-//     name: "Holly",
-//     breed: "Yorkshire Terrier",
-//     description: "Holly is an active and lovely dog. She is very caring towards kids and other dogs.",
-//     image: "https://upload.wikimedia.org/wikipedia/commons/b/bf/Holly_the_Yorkshire_Terrier.jpg"
-// }, function(error, dog) {
-//     if (error) {
-//         console.log(error);
-//     } else {
-//         console.log("Friend added");
-//         console.log(dog);
-//     }
-// });
-// Dog.create({
-//     name: "Rocky Dawg",
-//     breed: "German Shepherd",
-//     description: "Rocky is an large medium sized dog. He is very active and running a lot. He likes to meet a new friend.",
-//     image: "http://www.publicdomainpictures.net/pictures/30000/velka/rocky-dawg.jpg"
-// }, function(error, dog) {
-//     if (error) {
-//         console.log(error);
-//     } else {
-//         console.log("Friend added");
-//         console.log(dog);
-//     }
-// });
-
-// var dogs = [
-//     { name: "Rocky Dawg", breed: "German Shepherd", image:"http://www.publicdomainpictures.net/pictures/30000/velka/rocky-dawg.jpg" },
-//     { name: "Holly", breed: "Yorkshire Terrier", image:"https://upload.wikimedia.org/wikipedia/commons/b/bf/Holly_the_Yorkshire_Terrier.jpg" },
-//         { name: "Rocky Dawg", breed: "German Shepherd", image:"http://www.publicdomainpictures.net/pictures/30000/velka/rocky-dawg.jpg" },
-//     { name: "Holly", breed: "Yorkshire Terrier", image:"https://upload.wikimedia.org/wikipedia/commons/b/bf/Holly_the_Yorkshire_Terrier.jpg" },
-//         { name: "Rocky Dawg", breed: "German Shepherd", image:"http://www.publicdomainpictures.net/pictures/30000/velka/rocky-dawg.jpg" },
-//     { name: "Holly", breed: "Yorkshire Terrier", image:"https://upload.wikimedia.org/wikipedia/commons/b/bf/Holly_the_Yorkshire_Terrier.jpg" },
-// ];
+//passport setting
+app.use(require("express-session")({
+    secret: "secret key",
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+// var Dog = mongoose.model("Dog", dogSchema);
 
 app.get("/", function(req, res) {
     res.render("home");
 })
 
+//dogs
 app.get("/dogs", function(req, res) {
     //get all dogs from db.
     Dog.find({}, function(error, dogsList) {
@@ -73,41 +52,35 @@ app.get("/dogs", function(req, res) {
             console.log(error);
         } else {
 
-            res.render("dogs", { dogs: dogsList});
+            res.render("dogs/dogs", { dogs: dogsList });
         }
     })
 })
 
 app.get("/dogs/add", function(req, res) {
-    res.render("adddogs");
+    res.render("dogs/adddogs");
 })
 
 app.get("/dogs/:id", function(req, res) {
     //find by id
-    Dog.findById(req.params.id, function(error, theDog) {
+    Dog.findById(req.params.id).populate("comments").exec(function(error, theDog) {
         if (error) {
             console.log(error);
         } else {
             //render the page for some dog
-            res.render("details", { dog: theDog });
+            res.render("dogs/details", { dog: theDog });
         }
-
     });
 })
 
 app.post("/dogs", function(req, res) {
-    //get data from form
-    // var name = req.body.name;
-    // var breed = req.body.breed;
-    // var image = req.body.image;
-    // var desc = req.body.description;
-    // var newDog = { name: name, breed: breed, image: image, description: desc };
     //create new data to db
+    req.body.dog.description = req.sanitize(req.body.dog.description);
     Dog.create(req.body.dog, function(error, createdDog) {
         if (error) {
             console.log(error);
         } else {
-            res.redirect("dogs");
+            res.redirect("/dogs/dogs");
         }
     })
 })
@@ -120,50 +93,98 @@ app.get("/dogs/:id/edit", function(req, res) {
             res.redirect("/dogs");
         } else {
             //render the edit page for the dog
-            res.render("edit", { dog: theDog });
-                        // console.log(req.params.id);
+            res.render("dogs/edit", { dog: theDog });
+            // console.log(req.params.id);
         }
     });
 })
 
 app.put("/dogs/:id", function(req, res) {
-    // //get data from form
-    // var name = req.body.name;
-    // var breed = req.body.breed;
-    // var image = req.body.image;
-    // var desc = req.body.description;
-    // var newDog = { name: name, breed: breed, image: image, description: desc };
-    // //create new data to db
-    // Dog.update(newDog, function(error, createdDog) {
-    //     if (error) {
-    //         console.log(error);
-    //     } else {
-    //         res.redirect("dogs");
-    //     }
-    // })
-
-    Dog.findByIdAndUpdate(req.params.id, req.body.dog, function(error, updatedDog){
-        if(error){
+    req.body.dog.description = req.sanitize(req.body.dog.description);
+    Dog.findByIdAndUpdate(req.params.id, req.body.dog, function(error, updatedDog) {
+        if (error) {
             res.redirect("/dogs");
-        }
-        else{
+        } else {
             console.log(req.body.dog);
             res.redirect("/dogs/" + req.params.id);
         }
     })
-
     // res.send("update");
 })
 
-app.delete("/dogs/:id", function(req, res){
-    Dog.findByIdAndRemove(req.params.id, function(error){
-        if(error){
+app.delete("/dogs/:id", function(req, res) {
+    Dog.findByIdAndRemove(req.params.id, function(error) {
+        if (error) {
             res.redirect("/dogs");
         } else {
             res.redirect("/dogs");
         }
     })
     // res.send("deleted");
+})
+
+//comments
+app.get("/dogs/:id/comments/new", function(req, res) {
+    Dog.findById(req.params.id, function(error, dog) {
+        if (error) {
+            console.log(error);
+        } else {
+            res.render("comments/new", { dog: dog });
+        }
+    })
+})
+
+app.post("/dogs/:id/comments", function(req, res) {
+    Dog.findById(req.params.id, function(error, dog) {
+        if (error) {
+            console.log(error);
+            res.redirect("/dogs")
+        } else {
+            Comment.create(req.body.comment, function(error, comment) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    dog.comments.push(comment);
+                    dog.save();
+                    res.redirect("/dogs/" + dog._id);
+                }
+            })
+        }
+    })
+})
+
+//account
+app.get("/register", function(req, res) {
+    res.render("register");
+})
+
+app.post("/register", function(req, res) {
+    var user = new User({ username: req.body.username });
+    User.register(user, req.body.password, function(error, user) {
+        if (error) {
+            console.log(error);
+            return res.render("register");
+        }
+        passport.authenticate("local")(req, res, function() {
+            res.redirect("/dogs");
+        });
+    });
+})
+
+app.get("/login", function(req, res) {
+    res.render("login");
+})
+
+app.post("/login", passport.authenticate("local", {
+        successRedirect: "/dogs",
+        failRedirect: "/login"
+    }), function(req, res) {
+
+});
+
+app.get("/logout", function(){
+    req.logout();
+    res.redirect("/dogs");
 })
 
 app.listen(3000, function() {

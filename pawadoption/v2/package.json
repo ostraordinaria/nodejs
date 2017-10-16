@@ -1,15 +1,19 @@
 {
-  "name": "dogadoption",
-  "version": "1.0.0",
-  "description": "dogadoption v1",
+  "name": "pawadoption",
+  "version": "2.0.0",
+  "description": "pawadoption v2",
   "main": "app.js",
   "dependencies": {
     "body-parser": "^1.18.2",
     "ejs": "^2.5.7",
     "express": "^4.16.1",
+    "express-sanitizer": "^1.0.2",
+    "express-session": "^1.15.6",
     "method-override": "^2.3.10",
-    "mongodb": "^2.2.31",
-    "mongoose": "^4.12.1"
+    "mongoose": "^4.12.1",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^4.2.1"
   },
   "devDependencies": {},
   "scripts": {

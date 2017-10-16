@@ -1,4 +1,4 @@
-<% include master/header %>
+<% include ../master/header %>
 
 <h1>Details for dog</h1>
 
@@ -9,4 +9,9 @@
 <p><%= dog.breed %></p>
 
 <p><%= dog.description %></p>
-<% include master/footer %>
+
+<% dog.comments.forEach(function(comment){ %>
+	<p><b><%= comment.name %></b> : <%= comment.message %></p>
+<% }) %>
+
+<% include ../master/footer %>
