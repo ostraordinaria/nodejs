@@ -19,9 +19,14 @@ var commentRoutes = require("./routes/comment"),
 //add mongoose and connect to pawadoption db.
 //it will check if the selected db is available.
 //if it's not available then it will create a new one.
-mongoose.connect('mongodb://localhost/pawadoption', {
+// mongoose.connect('mongodb://localhost/pawadoption', {
+//     useMongoClient: true
+// });
+var url = process.env.DATABASEURL || "mongodb://localhost/pawadoption"
+mongoose.connect(process.env.DATABASEURL, {
     useMongoClient: true
 });
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"))
@@ -55,6 +60,6 @@ app.use("/dogs", dogRoutes);
 app.use("/dogs/:id/comments", commentRoutes);
 
 
-app.listen(3000, function() {
+app.listen(process.env.PORT, process.env.IP , function() {
     console.log("Server has started");
 });
