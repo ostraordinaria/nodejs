@@ -1,20 +1,23 @@
 <% include ../master/header %>
     <div class="container">
-        <div class="row">
-            <div style="width:30%; margin:0 auto; text-align:center;">
+        <div class="row text-center">
+            <div class="col-md-4 col-lg-4 text-center">
                 <h1 style="margin:1.5rem;">Add a new dog</h1>
                 <form action="/dogs" method="POST">
                     <div class="form-group">
-                        <input class="form-control" type="text" name="dog[name]" placeholder="name">
+                        <input class="form-control" type="text" name="dog[name]" placeholder="name" required="true">
                     </div>
                     <div class="form-group">
-                        <input class="form-control" type="text" name="dog[breed]" placeholder="breed">
+                        <input class="form-control" type="number" name="dog[age]" placeholder="age" required="true">
                     </div>
                     <div class="form-group">
-                        <input class="form-control" type="text" name="dog[image]" placeholder="image">
+                        <input class="form-control" type="text" name="dog[breed]" placeholder="breed" required="true">
                     </div>
                     <div class="form-group">
-                        <textarea name="dog[description]" class="form-control" rows="3" placeholder="description"></textarea>
+                        <input class="form-control" type="text" name="dog[image]" placeholder="image" required="true">
+                    </div>
+                    <div class="form-group">
+                        <textarea name="dog[description]" class="form-control" rows="3" placeholder="description" required="true"></textarea>
                     </div>
                     <div class="form-group">
                         <button class="btn btn-primary btn-block">Submit</button>

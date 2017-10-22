@@ -16,6 +16,7 @@
     </style>
     <title>Paw Adoption</title>
 </head>
+
 <body>
     <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
         <div class="container">
@@ -28,17 +29,44 @@
                 </ul>
                 <form class="form-inline">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/register">Sign Up <i class="fa fa-user-plus"></i></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/login">Login <i class="fa fa-user"></i></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/logout">Logout <i class="fa fa-user"></i></a>
-                        </li>
+                        <%if(!currentUser){%>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/register">Sign Up <i class="fa fa-user-plus"></i></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/login">Login <i class="fa fa-user"></i></a>
+                            </li>
+                            <%} else { %>
+                                <li class="nav-item">
+                                    <a class="nav-link">Signed in as <%= currentUser.username%> <i class="fa fa-user-circle-o"></i></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/logout">Logout </a>
+                                </li>
+                                <% }%>
                     </ul>
                 </form>
             </div>
         </div>
     </nav>
+    <% if(flash.error) {%>
+        <div class="container">
+            <div class="alert alert-danger" role="alert">
+                <%= flash.error%>
+            </div>
+        </div>
+        <%}%>
+            <% if(flash.welcome) {%>
+                <div class="container">
+                    <div class="alert alert-success" role="alert">
+                        <%= flash.welcome%>
+                    </div>
+                    <%}%>
+                </div>
+                <% if(flash.logout) {%>
+                    <div class="container">
+                        <div class="alert alert-success" role="alert">
+                            <%= flash.logout%>
+                        </div>
+                        <%}%>
+                    </div>

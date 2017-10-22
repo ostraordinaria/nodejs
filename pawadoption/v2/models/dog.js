@@ -6,6 +6,17 @@ var dogSchema = new mongoose.Schema({
     breed: String,
     description: String,
     image: String,
+    age: Number,
+    createdBy:{
+    	id: {
+    		type: mongoose.Schema.Types.ObjectId,
+    		ref: "User"
+    	},
+    	username: String
+    },
+    createdOn: {
+    	type: Date, default: Date.now
+    },
     comments: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Comment"

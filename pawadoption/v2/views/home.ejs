@@ -1,10 +1,21 @@
-<% include master/header %>
-
-<div class="container">
-<h1>Home Page</h1>
-
-<p>Welcome to Paw Adoption</p>
-<a href="/dogs">View Friends</a>
-
-<% include master/footer %>
-</div>
+<% include master/html %>
+    <%include master/head%>
+    <link rel=stylesheet href="/stylesheet/home.css">
+        <% include master/endhead %>
+            <% include master/body %>
+                <% include master/nav %>
+                    <div class="container">
+                        <div class="row h-100">
+                            <div class="col-lg-12 my-auto">
+                                <div id="content">
+                                    <h1>Paw Adoption</h1>
+                                    <h3>Save a life. Adopt.</h3>
+                                    <hr>
+                                    <a href="/dogs" class="btn btn-lg btn-light">
+                        <i class="fa fa-paw"></i> Adopt Now</a>
+                                </div>
+                            </div>
+                        </div>
+                        <% include master/script %>
+                        <% include master/endbody %>
+                            <% include master/endhtml%>

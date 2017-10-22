@@ -38,26 +38,26 @@ function seed() {
             console.log("dogs and comment removed");
             //input all data to db
             sampleData.forEach(function(seed) {
-                Dog.create(seed, function(error, dog) {
-                    if (error) {
-                        console.log(error);
-                    } else {
-                        console.log("Dog added");
-                        //create comment
-                        Comment.create({
-                            name: "Steven",
-                            message: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo"
-                        }, function(error, comment) {
-                            if (error) {
-                                console.log(error);
-                            } else {
-                                dog.comments.push(comment);
-                                dog.save();
-                                console.log("new comment created");
-                            }
-                        })
-                    }
-                })
+                // Dog.create(seed, function(error, dog) {
+                //     if (error) {
+                //         console.log(error);
+                //     } else {
+                //         console.log("Dog added");
+                //         //create comment
+                //         Comment.create({
+                //             name: "Steven",
+                //             message: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo"
+                //         }, function(error, comment) {
+                //             if (error) {
+                //                 console.log(error);
+                //             } else {
+                //                 dog.comments.push(comment);
+                //                 dog.save();
+                //                 console.log("new comment created");
+                //             }
+                //         })
+                //     }
+                // })
             })
         }
     });
