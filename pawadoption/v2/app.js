@@ -3,14 +3,16 @@ var express = require("express"),
     mongoose = require("mongoose"),
     bodyParser = require("body-parser"),
     flash = require('express-flash-2');
-methodOverride = require("method-override"),
+    methodOverride = require("method-override"),
     expressSanitizer = require("express-sanitizer"),
     passport = require("passport"),
     LocalStrategy = require("passport-local"),
     User = require("./models/user"),
     Dog = require("./models/dog"),
     Comment = require("./models/comment"),
-    seed = require("./seeds");
+    seed = require("./seeds"),
+    favicon = require("serve-favicon"),
+    path = require('path');
 
 var commentRoutes = require("./routes/comment"),
     dogRoutes = require("./routes/dogs"),
@@ -22,14 +24,15 @@ var commentRoutes = require("./routes/comment"),
 // mongoose.connect('mongodb://localhost/pawadoption', {
 //     useMongoClient: true
 // });
-var url = process.env.DATABASEURL || "mongodb://localhost/pawadoption"
-mongoose.connect(process.env.DATABASEURL, {
+var url = process.env.DATABASEURL || 'mongodb://localhost/pawadoption';
+mongoose.connect(url, {
     useMongoClient: true
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
-app.use(express.static(__dirname + "/public"))
+app.use(express.static(__dirname + "/public"));
+app.use(favicon(path.join(__dirname, 'public', '/images/dog-icon.ico')));
 app.use(methodOverride("_method"));
 app.use(expressSanitizer());
 
@@ -59,7 +62,8 @@ app.use(indexRoutes);
 app.use("/dogs", dogRoutes);
 app.use("/dogs/:id/comments", commentRoutes);
 
-
-app.listen(process.env.PORT, process.env.IP , function() {
+var port = process.env.PORT || 3000;
+var ip = process.env.IP || 'localhost';
+app.listen(port, ip, function() {
     console.log("Server has started");
 });
